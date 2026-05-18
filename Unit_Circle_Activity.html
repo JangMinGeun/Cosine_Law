@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>코사인법칙 수선 유도 활동</title>
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #d1d5db;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --warn: #b45309;
+      --danger: #dc2626;
+      --green: #047857;
+      --shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f8fafc 0%, var(--bg) 100%);
+      color: var(--ink);
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 18px 40px;
+    }
+
+    header {
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+      letter-spacing: -0.04em;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.85fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(209, 213, 219, 0.8);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .canvas-card {
+      padding: 14px;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+      background:
+        linear-gradient(#f1f5f9 1px, transparent 1px),
+        linear-gradient(90deg, #f1f5f9 1px, transparent 1px),
+        #ffffff;
+      background-size: 40px 40px;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    canvas.dragging { cursor: grabbing; }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .section + .section {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .controls {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    select, button {
+      font: inherit;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    button {
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: var(--ink);
+      padding: 10px 8px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    button:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    button:active { transform: translateY(1px); }
+
+    .hint {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #334155;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .pill.accent { background: var(--accent-soft); color: #1d4ed8; }
+    .pill.green { background: #d1fae5; color: var(--green); }
+    .pill.warn { background: #fef3c7; color: var(--warn); }
+    .pill.danger { background: #fee2e2; color: var(--danger); }
+
+    .formula-box {
+      padding: 14px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      overflow-x: auto;
+    }
+
+    .formula {
+      margin: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.96rem;
+      line-height: 1.75;
+      white-space: nowrap;
+    }
+
+    .formula strong {
+      color: var(--accent);
+    }
+
+    .measure-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .measure {
+      padding: 10px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .measure b {
+      display: block;
+      margin-bottom: 2px;
+      color: #111827;
+    }
+
+    .questions {
+      margin: 0;
+      padding-left: 18px;
+      color: #374151;
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .questions li + li { margin-top: 6px; }
+
+    .mini-note {
+      margin: 10px 0 0;
+      font-size: 0.86rem;
+      color: #4b5563;
+      line-height: 1.55;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      padding: 10px 12px;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .measure-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>코사인법칙: 수선과 피타고라스 정리로 보기</h1>
+      <p class="lead">
+        꼭짓점을 드래그하여 삼각형을 바꾸고, 선택한 꼭짓점에서 대변으로 수선을 내려 보세요.
+        수선의 발 H가 선분 안쪽, 바깥쪽, 꼭짓점 위에 놓이는 경우를 모두 관찰할 수 있습니다.
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="card canvas-card">
+        <canvas id="board" width="900" height="560" aria-label="드래그 가능한 삼각형과 수선"></canvas>
+      </section>
+
+      <aside class="card panel">
+        <section class="section">
+          <h2 class="section-title">조작</h2>
+          <div class="controls">
+            <div>
+              <label for="altitudeFrom">수선을 내릴 꼭짓점</label>
+              <select id="altitudeFrom">
+                <option value="A">A에서 대변으로</option>
+                <option value="B">B에서 대변으로</option>
+                <option value="C">C에서 대변으로</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="angleAt">코사인법칙의 기준각</label>
+              <select id="angleAt">
+                <option value="Q">기준각 1</option>
+                <option value="R">기준각 2</option>
+              </select>
+              <p class="hint">수선을 내린 꼭짓점이 아니라, 대변의 양 끝점 중 하나를 기준각으로 잡아 피타고라스 정리를 적용합니다.</p>
+            </div>
+
+            <div>
+              <label>삼각형 예시</label>
+              <div class="btn-row">
+                <button type="button" data-preset="acute">예각</button>
+                <button type="button" data-preset="right">직각</button>
+                <button type="button" data-preset="obtuse">둔각</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+       
+
+        <section class="section">
+          <h2 class="section-title">공식 유도</h2>
+          <div class="formula-box">
+            <p class="formula" id="formulaText"></p>
+          </div>
+          <p class="mini-note" id="signedNote"></p>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">현재 상태</h2>
+          <div class="pill-row" id="statusPills"></div>
+          <div class="measure-list" id="measureList"></div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title">생각해 볼 수 있는 질문</h2>
+          <ol class="questions">
+            <li>H가 선분 안쪽에 있을 때와 바깥쪽에 있을 때, 식에서 달라지는 부분은 무엇인가?</li>
+            <li>둔각삼각형에서도 같은 코사인법칙이 유지되는 이유는 무엇인가?</li>
+            <li>직각삼각형이 되면 코사인법칙은 피타고라스 정리와 어떻게 연결되는가?</li>
+          </ol>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('board');
+    const ctx = canvas.getContext('2d');
+    const altitudeFrom = document.getElementById('altitudeFrom');
+    const angleAt = document.getElementById('angleAt');
+    const statusPills = document.getElementById('statusPills');
+    const measureList = document.getElementById('measureList');
+    const formulaText = document.getElementById('formulaText');
+    const signedNote = document.getElementById('signedNote');
+
+    const W = canvas.width;
+    const H_CANVAS = canvas.height;
+    const unitScale = 70;
+
+    const vertexColor = {
+      A: '#2563eb',
+      B: '#059669',
+      C: '#dc2626'
+    };
+
+    // 표준 표기: A의 대변은 a, B의 대변은 b, C의 대변은 c
+    const sideLetter = {
+      A: 'a',
+      B: 'b',
+      C: 'c'
+    };
+
+    const vertices = {
+      A: { x: 445, y: 135 },
+      B: { x: 230, y: 430 },
+      C: { x: 690, y: 420 }
+    };
+
+    const baseOrder = {
+      A: ['B', 'C'],
+      B: ['C', 'A'],
+      C: ['A', 'B']
+    };
+
+    let dragging = null;
+
+    function sideNameBetween(label1, label2) {
+      const labels = ['A', 'B', 'C'];
+      const opposite = labels.find(label => label !== label1 && label !== label2);
+      return sideLetter[opposite];
+    }
+
+    function clonePreset(name) {
+      const presets = {
+        acute: {
+          A: { x: 445, y: 125 },
+          B: { x: 225, y: 430 },
+          C: { x: 690, y: 420 }
+        },
+        right: {
+          A: { x: 250, y: 420 },
+          B: { x: 250, y: 150 },
+          C: { x: 705, y: 420 }
+        },
+        obtuse: {
+          A: { x: 185, y: 395 },
+          B: { x: 430, y: 155 },
+          C: { x: 745, y: 420 }
+        }
+      };
+      return JSON.parse(JSON.stringify(presets[name]));
+    }
+
+    function applyPreset(name) {
+      const next = clonePreset(name);
+      Object.assign(vertices.A, next.A);
+      Object.assign(vertices.B, next.B);
+      Object.assign(vertices.C, next.C);
+      draw();
+    }
+
+    function dist(P, Q) {
+      return Math.hypot(P.x - Q.x, P.y - Q.y);
+    }
+
+    function dot(u, v) {
+      return u.x * v.x + u.y * v.y;
+    }
+
+    function sub(P, Q) {
+      return { x: P.x - Q.x, y: P.y - Q.y };
+    }
+
+    function add(P, Q) {
+      return { x: P.x + Q.x, y: P.y + Q.y };
+    }
+
+    function mul(v, k) {
+      return { x: v.x * k, y: v.y * k };
+    }
+
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function unitLength(px) {
+      return px / unitScale;
+    }
+
+    function fmt(n, digits = 2) {
+      if (!Number.isFinite(n)) return '-';
+      return Number(n).toFixed(digits).replace(/\.00$/, '');
+    }
+
+    function angleBetween(P, V, Q) {
+      const v1 = sub(P, V);
+      const v2 = sub(Q, V);
+      const denom = Math.hypot(v1.x, v1.y) * Math.hypot(v2.x, v2.y);
+      if (denom < 1e-8) return 0;
+      const c = clamp(dot(v1, v2) / denom, -1, 1);
+      return Math.acos(c);
+    }
+
+    function deg(rad) {
+      return rad * 180 / Math.PI;
+    }
+
+    function triangleAngles() {
+      const A = vertices.A, B = vertices.B, C = vertices.C;
+      return {
+        A: deg(angleBetween(B, A, C)),
+        B: deg(angleBetween(C, B, A)),
+        C: deg(angleBetween(A, C, B))
+      };
+    }
+
+    function classifyTriangle() {
+      const ang = triangleAngles();
+      const values = Object.values(ang);
+      const eps = 0.8;
+      if (values.some(v => Math.abs(v - 90) <= eps)) return { type: '직각삼각형', tone: 'green', angles: ang };
+      if (values.some(v => v > 90 + eps)) return { type: '둔각삼각형', tone: 'warn', angles: ang };
+      return { type: '예각삼각형', tone: 'accent', angles: ang };
+    }
+
+    function currentSetup() {
+      const PLabel = altitudeFrom.value;
+      const [QLabel, RLabel] = baseOrder[PLabel];
+      const P = vertices[PLabel];
+      const Q = vertices[QLabel];
+      const R = vertices[RLabel];
+      return { PLabel, QLabel, RLabel, P, Q, R };
+    }
+
+    function projectionFoot(P, Q, R) {
+      const QR = sub(R, Q);
+      const len2 = dot(QR, QR);
+      if (len2 < 1e-8) return { H: { ...Q }, t: 0, baseLen: 0 };
+      const t = dot(sub(P, Q), QR) / len2;
+      return {
+        H: add(Q, mul(QR, t)),
+        t,
+        baseLen: Math.sqrt(len2)
+      };
+    }
+
+    function getDerivationData() {
+      const { PLabel, QLabel, RLabel, P, Q, R } = currentSetup();
+      const foot = projectionFoot(P, Q, R);
+      const selectedBaseLabel = angleAt.value === 'Q' ? QLabel : RLabel;
+      const otherBaseLabel = angleAt.value === 'Q' ? RLabel : QLabel;
+      const V = vertices[selectedBaseLabel];
+      const O = vertices[otherBaseLabel];
+      const selectedToOther = dist(V, O);
+      const selectedToP = dist(V, P);
+      const otherToP = dist(O, P);
+      const theta = angleBetween(P, V, O);
+      const cosTheta = Math.cos(theta);
+      const signedVH = selectedToP * cosTheta;
+      const signedHO = selectedToOther - signedVH;
+      const PH = dist(P, foot.H);
+
+      return {
+        PLabel, QLabel, RLabel,
+        P, Q, R,
+        foot,
+        selectedBaseLabel,
+        otherBaseLabel,
+        V,
+        O,
+        theta,
+        cosTheta,
+        selectedToOther,
+        selectedToP,
+        otherToP,
+        signedVH,
+        signedHO,
+        PH,
+        baseSide: sideLetter[PLabel],
+        adjacentSide: sideLetter[otherBaseLabel],
+        targetSide: sideLetter[selectedBaseLabel]
+      };
+    }
+
+    function updateAngleSelectorLabels() {
+      const { QLabel, RLabel } = currentSetup();
+      angleAt.options[0].textContent = `∠${QLabel}을 기준으로`;
+      angleAt.options[1].textContent = `∠${RLabel}을 기준으로`;
+    }
+
+    function footStatus(t) {
+      const eps = 0.015;
+      if (Math.abs(t) <= eps) return { text: 'H가 대변의 한 끝점 위', tone: 'green' };
+      if (Math.abs(t - 1) <= eps) return { text: 'H가 대변의 한 끝점 위', tone: 'green' };
+      if (t > 0 && t < 1) return { text: 'H가 선분 안쪽', tone: 'accent' };
+      return { text: 'H가 선분 바깥쪽', tone: 'warn' };
+    }
+
+    function drawLine(P, Q, options = {}) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(P.x, P.y);
+      ctx.lineTo(Q.x, Q.y);
+      ctx.lineWidth = options.width ?? 2;
+      ctx.strokeStyle = options.color ?? '#111827';
+      if (options.dash) ctx.setLineDash(options.dash);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawPoint(P, label, options = {}) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(P.x, P.y, options.r ?? 10, 0, Math.PI * 2);
+      ctx.fillStyle = options.fill ?? vertexColor[label] ?? '#111827';
+      ctx.fill();
+      ctx.lineWidth = options.strokeWidth ?? 3;
+      ctx.strokeStyle = '#fff';
+      ctx.stroke();
+
+      ctx.font = '700 18px system-ui, sans-serif';
+      ctx.fillStyle = options.textColor ?? '#111827';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const dx = options.dx ?? 0;
+      const dy = options.dy ?? -25;
+      ctx.fillText(label, P.x + dx, P.y + dy);
+      ctx.restore();
+    }
+
+    function drawText(text, x, y, options = {}) {
+      ctx.save();
+      ctx.font = options.font ?? '700 15px system-ui, sans-serif';
+      ctx.fillStyle = options.color ?? '#374151';
+      ctx.textAlign = options.align ?? 'center';
+      ctx.textBaseline = options.baseline ?? 'middle';
+      if (options.bg) {
+        const metrics = ctx.measureText(text);
+        const padX = 6, padY = 4;
+        const h = 22;
+        const w = metrics.width + padX * 2;
+        const left = options.align === 'left' ? x - padX : x - w / 2;
+        const top = y - h / 2;
+        ctx.fillStyle = options.bg;
+        roundRect(left, top, w, h, 8);
+        ctx.fill();
+        ctx.fillStyle = options.color ?? '#374151';
+      }
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
+
+    function drawOffsetSegmentLabel(P, Q, label, options = {}) {
+      const dx = Q.x - P.x;
+      const dy = Q.y - P.y;
+      const len = Math.hypot(dx, dy);
+    
+      if (len < 8) return; // x가 거의 0이면 표시하지 않음
+    
+      const nx = -dy / len;
+      const ny = dx / len;
+      const offset = options.offset ?? 18;
+    
+      const P2 = {
+        x: P.x + nx * offset,
+        y: P.y + ny * offset
+      };
+    
+      const Q2 = {
+        x: Q.x + nx * offset,
+        y: Q.y + ny * offset
+      };
+    
+      drawLine(P2, Q2, {
+        color: options.color ?? '#ef4444',
+        width: options.width ?? 4
+      });
+    
+      // 양 끝 표시
+      drawLine(
+        { x: P2.x - nx * 6, y: P2.y - ny * 6 },
+        { x: P2.x + nx * 6, y: P2.y + ny * 6 },
+        { color: options.color ?? '#ef4444', width: 2 }
+      );
+    
+      drawLine(
+        { x: Q2.x - nx * 6, y: Q2.y - ny * 6 },
+        { x: Q2.x + nx * 6, y: Q2.y + ny * 6 },
+        { color: options.color ?? '#ef4444', width: 2 }
+      );
+    
+      drawText(label, (P2.x + Q2.x) / 2, (P2.y + Q2.y) / 2, {
+        color: options.color ?? '#ef4444',
+        bg: '#fff1f2',
+        font: '800 15px system-ui, sans-serif'
+      });
+    }
+
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + r, y, r);
+      ctx.closePath();
+    }
+
+    function drawAngleArc(V, P1, P2, label) {
+      const r = 42;
+      const a1 = Math.atan2(P1.y - V.y, P1.x - V.x);
+      const a2 = Math.atan2(P2.y - V.y, P2.x - V.x);
+      let diff = (a2 - a1 + Math.PI * 2) % (Math.PI * 2);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#f59e0b';
+      if (diff <= Math.PI) {
+        ctx.arc(V.x, V.y, r, a1, a2, false);
+      } else {
+        ctx.arc(V.x, V.y, r, a2, a1, false);
+      }
+      ctx.stroke();
+
+      const mid = diff <= Math.PI ? a1 + diff / 2 : a2 + (Math.PI * 2 - diff) / 2;
+      drawText(label, V.x + Math.cos(mid) * (r + 18), V.y + Math.sin(mid) * (r + 18), {
+        color: '#92400e',
+        bg: '#fffbeb'
+      });
+      ctx.restore();
+    }
+
+    function drawRightAngleMarker(H, P, Q, R) {
+      const base = sub(R, Q);
+      const baseLen = Math.hypot(base.x, base.y);
+      const perp = sub(P, H);
+      const perpLen = Math.hypot(perp.x, perp.y);
+      if (baseLen < 1e-8 || perpLen < 1e-8) return;
+      const u = { x: base.x / baseLen, y: base.y / baseLen };
+      const v = { x: perp.x / perpLen, y: perp.y / perpLen };
+      const s = 16;
+      const p1 = add(H, mul(u, s));
+      const p2 = add(p1, mul(v, s));
+      const p3 = add(H, mul(v, s));
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.lineTo(p3.x, p3.y);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = '#7c3aed';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawExtensionIfNeeded(Q, R, foot) {
+      const { H, t, baseLen } = foot;
+      if (baseLen < 1e-8) return;
+      if (t < 0) drawLine(H, Q, { color: '#94a3b8', width: 2, dash: [7, 7] });
+      if (t > 1) drawLine(R, H, { color: '#94a3b8', width: 2, dash: [7, 7] });
+    }
+
+    function updatePanel(data) {
+      const triangle = classifyTriangle();
+      const foot = footStatus(data.foot.t);
+      const thetaDeg = deg(data.theta);
+      const adjacent = unitLength(data.selectedToP);
+      const base = unitLength(data.selectedToOther);
+      const target = unitLength(data.otherToP);
+      const h = unitLength(data.PH);
+
+      // 기준각이 둔각이면 cos 값이 음수이므로, x를 양의 길이로 두기 위해 x = -인접변·cos(기준각)으로 둔다.
+      // 기준각이 예각이면 x = 인접변·cos(기준각)으로 둔다.
+      const isObtuseAtSelectedAngle = data.cosTheta < -0.0001;
+      const isRightAtSelectedAngle = Math.abs(data.cosTheta) <= 0.0001;
+      const xValue = isObtuseAtSelectedAngle ? -adjacent * data.cosTheta : adjacent * data.cosTheta;
+      const otherSegment = isObtuseAtSelectedAngle ? base + xValue : base - xValue;
+
+      const lhs = target * target;
+      const rhs = adjacent * adjacent + base * base - 2 * adjacent * base * data.cosTheta;
+
+      const xDefinition = isObtuseAtSelectedAngle
+        ? `x = -${data.adjacentSide} cos${data.selectedBaseLabel}`
+        : `x = ${data.adjacentSide} cos${data.selectedBaseLabel}`;
+      const distanceExpression = isObtuseAtSelectedAngle
+        ? `(${data.baseSide} + x)<sup>2</sup>`
+        : `(${data.baseSide} - x)<sup>2</sup>`;
+      const expansionExpression = isObtuseAtSelectedAngle
+        ? `(${data.adjacentSide}<sup>2</sup> - x<sup>2</sup>) + (${data.baseSide} + x)<sup>2</sup>`
+        : `(${data.adjacentSide}<sup>2</sup> - x<sup>2</sup>) + (${data.baseSide} - x)<sup>2</sup>`;
+
+      statusPills.innerHTML = `
+        <span class="pill ${triangle.tone}">${triangle.type}</span>
+        <span class="pill ${foot.tone}">${foot.text}</span>
+        <span class="pill">${data.selectedBaseLabel} = ${fmt(thetaDeg, 1)}°</span>
+      `;
+
+      measureList.innerHTML = `
+        <div class="measure"><b>${data.baseSide}</b>${fmt(base)} 단위<br><span style="color:#6b7280">${data.PLabel}의 대변</span></div>
+        <div class="measure"><b>${data.adjacentSide}</b>${fmt(adjacent)} 단위<br><span style="color:#6b7280">${data.otherBaseLabel}의 대변</span></div>
+        <div class="measure"><b>${data.targetSide}</b>${fmt(target)} 단위<br><span style="color:#6b7280">${data.selectedBaseLabel}의 대변</span></div>
+        <div class="measure"><b>h = ${data.PLabel}H</b>${fmt(h)} 단위</div>
+        <div class="measure"><b>x = ${data.selectedBaseLabel}H</b>${fmt(xValue)} 단위<br><span style="color:#6b7280">${isObtuseAtSelectedAngle ? '양의 길이' : '기준각 방향의 길이'}</span></div>
+        <div class="measure"><b>${data.otherBaseLabel}H</b>${fmt(Math.abs(otherSegment))} 단위<br><span style="color:#6b7280">피타고라스에 쓰는 길이</span></div>
+      `;
+
+      formulaText.innerHTML = `
+        기준각: ${data.selectedBaseLabel}, 목표: ${data.targetSide}<sup>2</sup><br>
+        ${data.targetSide}<sup>2</sup> = h<sup>2</sup> + ${distanceExpression}<br>
+        ${xDefinition}, &nbsp; h<sup>2</sup> = ${data.adjacentSide}<sup>2</sup> - x<sup>2</sup><br>
+        ${data.targetSide}<sup>2</sup> = ${expansionExpression}<br>
+        <strong>${data.targetSide}<sup>2</sup> = ${data.adjacentSide}<sup>2</sup> + ${data.baseSide}<sup>2</sup> - 2${data.adjacentSide}${data.baseSide} cos∠${data.selectedBaseLabel}</strong><br>
+        수치 확인: ${fmt(lhs)} ≈ ${fmt(rhs)}
+      `;
+
+      if (isObtuseAtSelectedAngle) {
+        signedNote.textContent =
+          `기준각 ∠${data.selectedBaseLabel}이 둔각이면 H가 ${data.selectedBaseLabel} 쪽 바깥에 놓입니다. ` +
+          `이때 x는 양의 길이로 두어 x = -${data.adjacentSide} cos${data.selectedBaseLabel}로 나타내고, ` +
+          `${data.otherBaseLabel}H = ${data.baseSide} + x가 되어 ${data.targetSide}² = h² + (${data.baseSide} + x)²로 유도합니다.`;
+      } else if (isRightAtSelectedAngle) {
+        signedNote.textContent =
+          `기준각 ∠${data.selectedBaseLabel}이 직각이면 cos${data.selectedBaseLabel} = 0이므로 x = 0입니다. ` +
+          `따라서 코사인법칙은 ${data.targetSide}² = ${data.adjacentSide}² + ${data.baseSide}²가 되어 피타고라스 정리와 일치합니다.`;
+      } else {
+        signedNote.textContent =
+          `기준각 ∠${data.selectedBaseLabel}이 예각이면 x = ${data.adjacentSide} cos${data.selectedBaseLabel}입니다. ` +
+          `이때 ${data.otherBaseLabel}H = ${data.baseSide} - x가 되어 ${data.targetSide}² = h² + (${data.baseSide} - x)²로 유도합니다.`;
+      }
+    }
+
+    function drawSideLabels() {
+      const pairs = [
+        ['A', 'B'], ['B', 'C'], ['C', 'A']
+      ];
+      for (const [l1, l2] of pairs) {
+        const P = vertices[l1], Q = vertices[l2];
+        const mid = { x: (P.x + Q.x) / 2, y: (P.y + Q.y) / 2 };
+        const len = unitLength(dist(P, Q));
+        const name = sideNameBetween(l1, l2);
+        drawText(`${name}=${fmt(len)}`, mid.x, mid.y - 12, {
+          font: '700 13px system-ui, sans-serif',
+          color: '#475569',
+          bg: 'rgba(255,255,255,0.85)'
+        });
+      }
+    }
+
+    function draw() {
+      updateAngleSelectorLabels();
+      ctx.clearRect(0, 0, W, H_CANVAS);
+      const data = getDerivationData();
+      const { PLabel, QLabel, RLabel, P, Q, R, foot } = data;
+      const HPoint = foot.H;
+
+      // Triangle fill
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(vertices.A.x, vertices.A.y);
+      ctx.lineTo(vertices.B.x, vertices.B.y);
+      ctx.lineTo(vertices.C.x, vertices.C.y);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(37, 99, 235, 0.055)';
+      ctx.fill();
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.restore();
+
+      // Base extension and altitude
+      drawExtensionIfNeeded(Q, R, foot);
+      drawLine(P, HPoint, { color: '#7c3aed', width: 3, dash: [8, 7] });
+      drawRightAngleMarker(HPoint, P, Q, R);
+
+      // Highlight selected base and angle
+      drawLine(Q, R, { color: '#2563eb', width: 5 });
+      drawAngleArc(data.V, P, data.O, `∠${data.selectedBaseLabel}`);
+
+      // Re-draw triangle edges above highlights
+      drawLine(vertices.A, vertices.B, { color: '#111827', width: 2.5 });
+      drawLine(vertices.B, vertices.C, { color: '#111827', width: 2.5 });
+      drawLine(vertices.C, vertices.A, { color: '#111827', width: 2.5 });
+      drawLine(P, HPoint, { color: '#7c3aed', width: 3, dash: [8, 7] });
+
+      drawSideLabels();
+
+      drawOffsetSegmentLabel(data.V, HPoint, 'x');
+
+      const hMid = {
+        x: (P.x + HPoint.x) / 2,
+        y: (P.y + HPoint.y) / 2
+      };
+      
+      drawText('h', hMid.x + 18, hMid.y, {
+        color: '#5b21b6',
+        bg: '#ede9fe',
+        font: '800 15px system-ui, sans-serif'
+      });
+
+      // Foot H
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(HPoint.x, HPoint.y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = '#7c3aed';
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#fff';
+      ctx.stroke();
+      ctx.restore();
+      drawText('H', HPoint.x + 18, HPoint.y + 18, { color: '#5b21b6', bg: '#ede9fe' });
+
+      // Vertices
+      for (const label of ['A', 'B', 'C']) {
+        const isSelected = label === PLabel;
+        drawPoint(vertices[label], label, {
+          r: isSelected ? 12 : 10,
+          fill: isSelected ? '#7c3aed' : vertexColor[label]
+        });
+      }
+
+      // Small instruction on canvas
+      drawText('꼭짓점 A, B, C를 드래그해 보세요', 22, 28, {
+        align: 'left',
+        color: '#475569',
+        bg: 'rgba(255,255,255,0.9)',
+        font: '700 14px system-ui, sans-serif'
+      });
+      drawText(`${PLabel}에서 ${sideLetter[PLabel]}로 수선`, 22, 56, {
+        align: 'left',
+        color: '#5b21b6',
+        bg: '#ede9fe',
+        font: '700 14px system-ui, sans-serif'
+      });
+
+      updatePanel(data);
+    }
+
+    function pointerPosition(evt) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: (evt.clientX - rect.left) * (canvas.width / rect.width),
+        y: (evt.clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+
+    function nearestVertex(pos) {
+      let best = null;
+      let bestDist = Infinity;
+      for (const label of ['A', 'B', 'C']) {
+        const d = dist(pos, vertices[label]);
+        if (d < bestDist) {
+          bestDist = d;
+          best = label;
+        }
+      }
+      return bestDist <= 28 ? best : null;
+    }
+
+    canvas.addEventListener('pointerdown', (evt) => {
+      const pos = pointerPosition(evt);
+      const label = nearestVertex(pos);
+      if (!label) return;
+      dragging = label;
+      canvas.classList.add('dragging');
+      canvas.setPointerCapture(evt.pointerId);
+    });
+
+    canvas.addEventListener('pointermove', (evt) => {
+      if (!dragging) return;
+      const pos = pointerPosition(evt);
+      vertices[dragging].x = clamp(pos.x, 30, W - 30);
+      vertices[dragging].y = clamp(pos.y, 30, H_CANVAS - 30);
+      draw();
+    });
+
+    function stopDrag(evt) {
+      dragging = null;
+      canvas.classList.remove('dragging');
+      try { canvas.releasePointerCapture(evt.pointerId); } catch (e) {}
+    }
+
+    canvas.addEventListener('pointerup', stopDrag);
+    canvas.addEventListener('pointercancel', stopDrag);
+    canvas.addEventListener('pointerleave', () => {
+      if (!dragging) return;
+      dragging = null;
+      canvas.classList.remove('dragging');
+    });
+
+    altitudeFrom.addEventListener('change', draw);
+    angleAt.addEventListener('change', draw);
+
+    document.querySelectorAll('[data-preset]').forEach(btn => {
+      btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+    });
+
+    draw();
+  </script>
+</body>
+</html>
