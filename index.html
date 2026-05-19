@@ -490,7 +490,7 @@
     function getDerivationData() {
       const { PLabel, QLabel, RLabel, P, Q, R } = currentSetup();
       const foot = projectionFoot(P, Q, R);
-      const selectedBaseLabel = angleAt.value === 'Q' ? QLabel : RLabel;
+      const selectedBaseLabel = angleAt.value === 'R' ? QLabel : RLabel;
       const otherBaseLabel = angleAt.value === 'Q' ? RLabel : QLabel;
       const V = vertices[selectedBaseLabel];
       const O = vertices[otherBaseLabel];
