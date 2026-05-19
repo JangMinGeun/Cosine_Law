@@ -282,7 +282,7 @@
               <label for="angleAt">코사인법칙의 기준각</label>
               <select id="angleAt">
                 <option value="Q">기준각 1</option>
-                <option value="R">기준각 2</option>
+                <option value="R" selected>기준각 2</option>
               </select>
               <p class="hint">수선을 내린 꼭짓점이 아니라, 대변의 양 끝점 중 하나를 기준각으로 잡아 피타고라스 정리를 적용합니다.</p>
             </div>
@@ -490,7 +490,7 @@
     function getDerivationData() {
       const { PLabel, QLabel, RLabel, P, Q, R } = currentSetup();
       const foot = projectionFoot(P, Q, R);
-      const selectedBaseLabel = angleAt.value === 'R' ? QLabel : RLabel;
+      const selectedBaseLabel = angleAt.value === 'Q' ? QLabel : RLabel;
       const otherBaseLabel = angleAt.value === 'Q' ? RLabel : QLabel;
       const V = vertices[selectedBaseLabel];
       const O = vertices[otherBaseLabel];
