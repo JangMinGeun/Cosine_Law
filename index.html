@@ -753,22 +753,22 @@
         ${data.targetSide}<sup>2</sup> = h<sup>2</sup> + ${distanceExpression}<br>
         ${xDefinition}, &nbsp; h<sup>2</sup> = ${data.adjacentSide}<sup>2</sup> - x<sup>2</sup><br>
         ${data.targetSide}<sup>2</sup> = ${expansionExpression}<br>
-        <strong>${data.targetSide}<sup>2</sup> = ${data.adjacentSide}<sup>2</sup> + ${data.baseSide}<sup>2</sup> - 2${data.adjacentSide}${data.baseSide} cos∠${data.selectedBaseLabel}</strong><br>
+        <strong>${data.targetSide}<sup>2</sup> = ${data.adjacentSide}<sup>2</sup> + ${data.baseSide}<sup>2</sup> - 2${data.adjacentSide}${data.baseSide} cos${data.selectedBaseLabel}</strong><br>
         수치 확인: ${fmt(lhs)} ≈ ${fmt(rhs)}
       `;
 
       if (isObtuseAtSelectedAngle) {
         signedNote.textContent =
-          `기준각 ∠${data.selectedBaseLabel}이 둔각이면 H가 ${data.selectedBaseLabel} 쪽 바깥에 놓입니다. ` +
+          `기준각 ${data.selectedBaseLabel}이 둔각이면 H가 ${data.selectedBaseLabel} 쪽 바깥에 놓입니다. ` +
           `이때 x는 양의 길이로 두어 x = -${data.adjacentSide} cos${data.selectedBaseLabel}로 나타내고, ` +
           `${data.otherBaseLabel}H = ${data.baseSide} + x가 되어 ${data.targetSide}² = h² + (${data.baseSide} + x)²로 유도합니다.`;
       } else if (isRightAtSelectedAngle) {
         signedNote.textContent =
-          `기준각 ∠${data.selectedBaseLabel}이 직각이면 cos${data.selectedBaseLabel} = 0이므로 x = 0입니다. ` +
+          `기준각 ${data.selectedBaseLabel}이 직각이면 cos${data.selectedBaseLabel} = 0이므로 x = 0입니다. ` +
           `따라서 코사인법칙은 ${data.targetSide}² = ${data.adjacentSide}² + ${data.baseSide}²가 되어 피타고라스 정리와 일치합니다.`;
       } else {
         signedNote.textContent =
-          `기준각 ∠${data.selectedBaseLabel}이 예각이면 x = ${data.adjacentSide} cos${data.selectedBaseLabel}입니다. ` +
+          `기준각 ${data.selectedBaseLabel}이 예각이면 x = ${data.adjacentSide} cos${data.selectedBaseLabel}입니다. ` +
           `이때 ${data.otherBaseLabel}H = ${data.baseSide} - x가 되어 ${data.targetSide}² = h² + (${data.baseSide} - x)²로 유도합니다.`;
       }
     }
