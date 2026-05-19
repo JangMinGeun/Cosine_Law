@@ -158,6 +158,15 @@
       line-height: 1.55;
     }
 
+    .emphasis-hint {
+      color: #1d4ed8;
+      font-weight: 800;
+      background: #dbeafe;
+      border-left: 4px solid #2563eb;
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+
     .pill-row {
       display: flex;
       flex-wrap: wrap;
@@ -283,8 +292,10 @@
               <select id="angleAt">
                 <option value="Q">기준각 1</option>
                 <option value="R" selected>기준각 2</option>
+
               </select>
               <p class="hint">수선을 내린 꼭짓점이 아니라, 대변의 양 끝점 중 하나를 기준각으로 잡아 피타고라스 정리를 적용합니다.</p>
+              <p id="thinkingHint" class="emphasis-hint"></p>
             </div>
 
             <div>
@@ -335,6 +346,7 @@
     const measureList = document.getElementById('measureList');
     const formulaText = document.getElementById('formulaText');
     const signedNote = document.getElementById('signedNote');
+    const thinkingHint = document.getElementById('thinkingHint');
 
     const W = canvas.width;
     const H_CANVAS = canvas.height;
@@ -715,6 +727,9 @@
 
       // 기준각이 둔각이면 cos 값이 음수이므로, x를 양의 길이로 두기 위해 x = -인접변·cos(기준각)으로 둔다.
       // 기준각이 예각이면 x = 인접변·cos(기준각)으로 둔다.
+      
+      thinkingHint.textContent = `기준각 ${data.selectedBaseLabel}의 대변 ${data.targetSide}의 길이를 어떻게 구할 수 있을지 생각해 보세요.`;
+      
       const isObtuseAtSelectedAngle = data.cosTheta < -0.0001;
       const isRightAtSelectedAngle = Math.abs(data.cosTheta) <= 0.0001;
       const xValue = isObtuseAtSelectedAngle ? -adjacent * data.cosTheta : adjacent * data.cosTheta;
