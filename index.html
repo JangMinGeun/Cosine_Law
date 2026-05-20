@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>코사인법칙 수선 유도 활동</title>
+  <title>코사인법칙 수선 유도 활동 v10</title>
   <style>
     :root {
       --bg: #f7f7fb;
@@ -34,9 +34,7 @@
       padding: 28px 18px 40px;
     }
 
-    header {
-      margin-bottom: 18px;
-    }
+    header { margin-bottom: 18px; }
 
     h1 {
       margin: 0 0 8px;
@@ -66,6 +64,10 @@
 
     .canvas-card {
       padding: 14px;
+      position: sticky;
+      top: 14px;
+      align-self: start;
+      z-index: 3;
     }
 
     canvas {
@@ -78,15 +80,10 @@
         linear-gradient(90deg, #f1f5f9 1px, transparent 1px),
         #ffffff;
       background-size: 40px 40px;
-      touch-action: none;
-      cursor: grab;
+      cursor: default;
     }
 
-    canvas.dragging { cursor: grabbing; }
-
-    .panel {
-      padding: 18px;
-    }
+    .panel { padding: 18px; }
 
     .section + .section {
       margin-top: 18px;
@@ -114,9 +111,7 @@
       color: #374151;
     }
 
-    select, button {
-      font: inherit;
-    }
+    select, button { font: inherit; }
 
     select {
       width: 100%;
@@ -151,6 +146,12 @@
 
     button:active { transform: translateY(1px); }
 
+    button.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
     .hint {
       margin: 8px 0 0;
       color: var(--muted);
@@ -159,12 +160,183 @@
     }
 
     .emphasis-hint {
+      margin: 8px 0 0;
       color: #1d4ed8;
       font-weight: 800;
       background: #dbeafe;
       border-left: 4px solid #2563eb;
       padding: 10px 12px;
       border-radius: 10px;
+      line-height: 1.5;
+    }
+
+
+
+    .mission-box {
+      margin-top: 10px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+    }
+
+    .mission-title {
+      margin: 0 0 8px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+
+
+    .mission-lines {
+      display: grid;
+      gap: 11px;
+      margin: 0;
+      padding-left: 18px;
+      color: #374151;
+      line-height: 1.8;
+      font-size: 0.94rem;
+    }
+
+    .worksheet-proof {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+      color: #374151;
+      line-height: 1.9;
+      font-size: 0.95rem;
+    }
+
+    .proof-row {
+      padding-left: 0;
+    }
+
+    .proof-sub {
+      padding-left: 18px;
+    }
+
+    .proof-case {
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+
+    .proof-final {
+      font-weight: 900;
+      color: #1d4ed8;
+    }
+
+    .mission-input {
+      width: 54px;
+      min-height: 30px;
+      margin: 0 3px;
+      padding: 4px 7px;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #111827;
+      font: 800 0.95rem ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      text-align: center;
+      transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .mission-input.mini { width: 40px; }
+    .mission-input.small { width: 54px; }
+    .mission-input.medium { width: 66px; }
+    .mission-input.wide { width: 82px; }
+    .mission-input.expr { width: 66px; }
+    .mission-input.long { width: 92px; }
+
+
+
+    .mission-input::placeholder {
+      color: #94a3b8;
+      opacity: 1;
+      font-weight: 900;
+    }
+
+    .mission-input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .mission-input.correct {
+      border-color: #16a34a;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .mission-input.wrong {
+      border-color: #dc2626;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .mission-progress {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.9rem;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .mission-progress.complete {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #86efac;
+    }
+
+    .mission-tip {
+      margin: 10px 0 0;
+      color: #64748b;
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .blank-lines {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding-left: 18px;
+      color: #374151;
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .blank {
+      display: inline-block;
+      min-width: 54px;
+      padding: 0 6px 2px;
+      border-bottom: 2px solid #64748b;
+      color: transparent;
+      user-select: none;
+    }
+
+    .answer-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-weight: 800;
+    }
+
+    .formula-check {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-weight: 800;
+      line-height: 1.55;
+      font-size: 0.9rem;
     }
 
     .pill-row {
@@ -206,9 +378,7 @@
       white-space: nowrap;
     }
 
-    .formula strong {
-      color: var(--accent);
-    }
+    .formula strong { color: var(--accent); }
 
     .measure-list {
       display: grid;
@@ -255,6 +425,7 @@
 
     @media (max-width: 900px) {
       .layout { grid-template-columns: 1fr; }
+      .canvas-card { position: static; }
       .measure-list { grid-template-columns: 1fr; }
     }
   </style>
@@ -264,14 +435,14 @@
     <header>
       <h1>코사인법칙: 수선과 피타고라스 정리로 보기</h1>
       <p class="lead">
-        꼭짓점을 드래그하여 삼각형을 바꾸고, 선택한 꼭짓점에서 대변으로 수선을 내려 보세요.
-        수선의 발 H가 선분 안쪽, 바깥쪽, 꼭짓점 위에 놓이는 경우를 모두 관찰할 수 있습니다.
+        꼭짓점은 고정하고, 예각·직각·둔각 버튼을 눌러 삼각형을 비교해 보세요.
+        수선의 발 H의 위치와 식의 변화를 관찰하고, 오른쪽 미션의 빈칸을 모두 초록색으로 만들어 봅시다.
       </p>
     </header>
 
     <main class="layout">
       <section class="card canvas-card">
-        <canvas id="board" width="900" height="560" aria-label="드래그 가능한 삼각형과 수선"></canvas>
+        <canvas id="board" width="900" height="560" aria-label="코사인법칙 수선 유도 그림"></canvas>
       </section>
 
       <aside class="card panel">
@@ -281,35 +452,40 @@
             <div>
               <label for="altitudeFrom">수선을 내릴 꼭짓점</label>
               <select id="altitudeFrom">
-                <option value="A">A에서 대변으로</option>
-                <option value="B">B에서 대변으로</option>
-                <option value="C">C에서 대변으로</option>
+                <option value="A">A에서 대변 a로</option>
+                <option value="B">B에서 대변 b로</option>
+                <option value="C">C에서 대변 c로</option>
               </select>
             </div>
 
             <div>
-              <label for="angleAt">코사인법칙의 기준각</label>
-              <select id="angleAt">
-                <option value="Q">기준각 1</option>
-                <option value="R" selected>기준각 2</option>
-
-              </select>
-              <p class="hint">수선을 내린 꼭짓점이 아니라, 대변의 양 끝점 중 하나를 기준각으로 잡아 피타고라스 정리를 적용합니다.</p>
+              <label>코사인법칙의 기준각</label>
+              <p id="fixedAngleInfo" class="hint"></p>
               <p id="thinkingHint" class="emphasis-hint"></p>
             </div>
 
             <div>
               <label>삼각형 예시</label>
               <div class="btn-row">
-                <button type="button" data-preset="acute">예각</button>
+                <button type="button" data-preset="acute" class="active">예각</button>
                 <button type="button" data-preset="right">직각</button>
                 <button type="button" data-preset="obtuse">둔각</button>
               </div>
+              <p class="hint">B, C의 위치는 고정하고, 예각·직각·둔각 삼각형도 버튼별로 고정되어 있습니다.</p>
             </div>
           </div>
         </section>
 
-       
+
+        <section class="section">
+          <h2 class="section-title">탐구 미션</h2>
+          <div class="mission-box">
+            <p class="mission-title">학습지와 같은 흐름으로 빈칸을 채워 코사인법칙을 유도해 봅시다.</p>
+            <div class="worksheet-proof" id="blankMission"></div>
+            <div id="missionProgress" class="mission-progress">빈칸을 입력하면 바로 정답 여부가 표시됩니다.</div>
+            <p class="mission-tip">정답이면 빈칸이 초록색으로 바뀝니다. 대문자와 소문자는 구분됩니다. 다른 삼각형을 확인하고 돌아와도 입력한 답은 유지됩니다.</p>
+          </div>
+        </section>
 
         <section class="section">
           <h2 class="section-title">공식 유도</h2>
@@ -329,7 +505,7 @@
           <h2 class="section-title">생각해 볼 수 있는 질문</h2>
           <ol class="questions">
             <li>H가 선분 안쪽에 있을 때와 바깥쪽에 있을 때, 식에서 달라지는 부분은 무엇인가?</li>
-            <li>둔각삼각형에서도 같은 코사인법칙이 유지되는 이유는 무엇인가?</li>
+            <li>둔각삼각형에서는 왜 <b>b - x</b>가 아니라 <b>b + x</b> 꼴이 나타나는가?</li>
             <li>직각삼각형이 되면 코사인법칙은 피타고라스 정리와 어떻게 연결되는가?</li>
           </ol>
         </section>
@@ -341,12 +517,14 @@
     const canvas = document.getElementById('board');
     const ctx = canvas.getContext('2d');
     const altitudeFrom = document.getElementById('altitudeFrom');
-    const angleAt = document.getElementById('angleAt');
+    const fixedAngleInfo = document.getElementById('fixedAngleInfo');
+    const thinkingHint = document.getElementById('thinkingHint');
     const statusPills = document.getElementById('statusPills');
     const measureList = document.getElementById('measureList');
     const formulaText = document.getElementById('formulaText');
     const signedNote = document.getElementById('signedNote');
-    const thinkingHint = document.getElementById('thinkingHint');
+    let blankMission = document.getElementById('blankMission');
+    const missionProgress = document.getElementById('missionProgress');
 
     const W = canvas.width;
     const H_CANVAS = canvas.height;
@@ -365,10 +543,12 @@
       C: 'c'
     };
 
-    const vertices = {
-      A: { x: 445, y: 135 },
-      B: { x: 230, y: 430 },
-      C: { x: 690, y: 420 }
+    // 수선을 내리는 꼭짓점에 따라 기준각을 하나로 고정한다.
+    // A에서 수선 → 기준각 C, B에서 수선 → 기준각 A, C에서 수선 → 기준각 B
+    const fixedBasisAngle = {
+      A: 'C',
+      B: 'A',
+      C: 'B'
     };
 
     const baseOrder = {
@@ -377,7 +557,28 @@
       C: ['A', 'B']
     };
 
-    let dragging = null;
+    const fixedBase = {
+      B: { x: 220, y: 430 },
+      C: { x: 680, y: 430 }
+    };
+
+    // B, C는 고정하고 A의 위치만 바꾼다.
+    // 수선을 내리는 꼭짓점을 바꾸어도 현재 삼각형은 변하지 않는다.
+    const presetA = {
+      acute:  { x: 420, y: 150 }, // 예각삼각형
+      right:  { x: 680, y: 170 }, // ∠C가 직각인 직각삼각형
+      obtuse: { x: 805, y: 180 }  // ∠C가 둔각인 둔각삼각형
+    };
+
+    const vertices = {
+      A: { ...presetA.acute },
+      B: { ...fixedBase.B },
+      C: { ...fixedBase.C }
+    };
+
+    let currentPreset = 'acute';
+    let currentMissionKey = null;
+    const missionAnswers = {};
 
     function sideNameBetween(label1, label2) {
       const labels = ['A', 'B', 'C'];
@@ -385,32 +586,16 @@
       return sideLetter[opposite];
     }
 
-    function clonePreset(name) {
-      const presets = {
-        acute: {
-          A: { x: 445, y: 125 },
-          B: { x: 225, y: 430 },
-          C: { x: 690, y: 420 }
-        },
-        right: {
-          A: { x: 250, y: 150 },
-          B: { x: 705, y: 420 },
-          C: { x: 250, y: 420 }
-        },
-        obtuse: {
-          A: { x: 185, y: 395 },
-          B: { x: 745, y: 420 },
-          C: { x: 430, y: 155 }
-        }
-      };
-      return JSON.parse(JSON.stringify(presets[name]));
-    }
-
     function applyPreset(name) {
-      const next = clonePreset(name);
-      Object.assign(vertices.A, next.A);
-      Object.assign(vertices.B, next.B);
-      Object.assign(vertices.C, next.C);
+      currentPreset = name;
+      Object.assign(vertices.A, presetA[name]);
+      Object.assign(vertices.B, fixedBase.B);
+      Object.assign(vertices.C, fixedBase.C);
+
+      document.querySelectorAll('[data-preset]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.preset === name);
+      });
+
       draw();
     }
 
@@ -502,13 +687,17 @@
     function getDerivationData() {
       const { PLabel, QLabel, RLabel, P, Q, R } = currentSetup();
       const foot = projectionFoot(P, Q, R);
-      const selectedBaseLabel = angleAt.value === 'Q' ? QLabel : RLabel;
-      const otherBaseLabel = angleAt.value === 'Q' ? RLabel : QLabel;
-      const V = vertices[selectedBaseLabel];
-      const O = vertices[otherBaseLabel];
-      const selectedToOther = dist(V, O);
-      const selectedToP = dist(V, P);
-      const otherToP = dist(O, P);
+
+      const selectedBaseLabel = fixedBasisAngle[PLabel];
+      const otherBaseLabel = [QLabel, RLabel].find(label => label !== selectedBaseLabel);
+
+      const V = vertices[selectedBaseLabel]; // 기준각의 꼭짓점
+      const O = vertices[otherBaseLabel];   // 대변의 다른 끝점
+
+      const selectedToOther = dist(V, O); // 수선을 내린 꼭짓점의 대변
+      const selectedToP = dist(V, P);     // 기준각에 인접한 한 변
+      const otherToP = dist(O, P);        // 기준각의 대변
+
       const theta = angleBetween(P, V, O);
       const cosTheta = Math.cos(theta);
       const signedVH = selectedToP * cosTheta;
@@ -535,12 +724,6 @@
         adjacentSide: sideLetter[otherBaseLabel],
         targetSide: sideLetter[selectedBaseLabel]
       };
-    }
-
-    function updateAngleSelectorLabels() {
-      const { QLabel, RLabel } = currentSetup();
-      angleAt.options[0].textContent = `∠${QLabel}을 기준으로`;
-      angleAt.options[1].textContent = `∠${RLabel}을 기준으로`;
     }
 
     function footStatus(t) {
@@ -592,7 +775,7 @@
       if (options.bg) {
         const metrics = ctx.measureText(text);
         const padX = 6, padY = 4;
-        const h = 22;
+        const h = options.height ?? 22;
         const w = metrics.width + padX * 2;
         const left = options.align === 'left' ? x - padX : x - w / 2;
         const top = y - h / 2;
@@ -609,44 +792,43 @@
       const dx = Q.x - P.x;
       const dy = Q.y - P.y;
       const len = Math.hypot(dx, dy);
-    
-      if (len < 8) return; // x가 거의 0이면 표시하지 않음
-    
+
+      if (len < 8) return;
+
       const nx = -dy / len;
       const ny = dx / len;
       const offset = options.offset ?? 18;
-    
+
       const P2 = {
         x: P.x + nx * offset,
         y: P.y + ny * offset
       };
-    
+
       const Q2 = {
         x: Q.x + nx * offset,
         y: Q.y + ny * offset
       };
-    
+
       drawLine(P2, Q2, {
         color: options.color ?? '#ef4444',
         width: options.width ?? 4
       });
-    
-      // 양 끝 표시
+
       drawLine(
         { x: P2.x - nx * 6, y: P2.y - ny * 6 },
         { x: P2.x + nx * 6, y: P2.y + ny * 6 },
         { color: options.color ?? '#ef4444', width: 2 }
       );
-    
+
       drawLine(
         { x: Q2.x - nx * 6, y: Q2.y - ny * 6 },
         { x: Q2.x + nx * 6, y: Q2.y + ny * 6 },
         { color: options.color ?? '#ef4444', width: 2 }
       );
-    
+
       drawText(label, (P2.x + Q2.x) / 2, (P2.y + Q2.y) / 2, {
         color: options.color ?? '#ef4444',
-        bg: '#fff1f2',
+        bg: options.bg ?? '#fff1f2',
         font: '800 15px system-ui, sans-serif'
       });
     }
@@ -716,6 +898,172 @@
       if (t > 1) drawLine(R, H, { color: '#94a3b8', width: 2, dash: [7, 7] });
     }
 
+
+    function escapeAttr(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('"', '&quot;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
+    }
+
+    function normalizeMissionAnswer(value) {
+      return String(value)
+        .trim()
+        // 대문자와 소문자는 구분한다. 예: c와 C는 서로 다른 답이다.
+        .replaceAll('∠', '')
+        .replaceAll('△', '')
+        .replaceAll(' ', '')
+        .replaceAll('·', '')
+        .replaceAll('*', '')
+        .replaceAll('×', '')
+        .replaceAll('°', '')
+        .replaceAll('−', '-')
+        .replaceAll('–', '-')
+        .replaceAll('—', '-')
+        .replaceAll('²', '^2')
+        .replace(/cos\(([^)]+)\)/g, 'cos$1')
+        .replace(/sin\(([^)]+)\)/g, 'sin$1')
+        .replace(/\{([^}]+)\}/g, '$1');
+    }
+
+    function missionInput(answers, size = 'small', placeholder = '') {
+      const answerList = Array.isArray(answers) ? answers : [answers];
+      // placeholder에 정답이 보이지 않도록 모든 빈칸은 ?로만 표시한다.
+      return `<input type="text" class="mission-input ${size}" data-answers="${escapeAttr(answerList.join('||'))}" placeholder="?" autocomplete="off" spellcheck="false" aria-label="빈칸 입력">`;
+    }
+
+    function isMissionCorrect(input) {
+      const value = normalizeMissionAnswer(input.value);
+      if (!value) return false;
+      const answers = input.dataset.answers.split('||').map(normalizeMissionAnswer);
+      return answers.includes(value);
+    }
+
+    function buildMissionKey(data, isObtuseAtSelectedAngle, isRightAtSelectedAngle) {
+      const caseLabel = isRightAtSelectedAngle ? 'right' : (isObtuseAtSelectedAngle ? 'obtuse' : 'acute');
+      return `${currentPreset}|altitude:${data.PLabel}|basis:${data.selectedBaseLabel}|case:${caseLabel}`;
+    }
+
+    function saveCurrentMissionValues(key = currentMissionKey) {
+      if (!key || !blankMission) return;
+      const inputs = Array.from(blankMission.querySelectorAll('.mission-input'));
+      if (!inputs.length) return;
+      missionAnswers[key] = inputs.map(input => input.value);
+    }
+
+    function restoreMissionValues(key) {
+      const saved = missionAnswers[key];
+      if (!saved || !blankMission) return;
+      const inputs = Array.from(blankMission.querySelectorAll('.mission-input'));
+      inputs.forEach((input, index) => {
+        input.value = saved[index] ?? '';
+      });
+    }
+
+    function setupMissionChecks() {
+      const inputs = Array.from(blankMission.querySelectorAll('.mission-input'));
+
+      function updateProgress() {
+        let correctCount = 0;
+        inputs.forEach(input => {
+          const value = input.value.trim();
+          input.classList.remove('correct', 'wrong');
+
+          if (!value) return;
+
+          if (isMissionCorrect(input)) {
+            input.classList.add('correct');
+            correctCount += 1;
+          } else {
+            input.classList.add('wrong');
+          }
+        });
+
+        if (correctCount === inputs.length && inputs.length > 0) {
+          missionProgress.classList.add('complete');
+          missionProgress.textContent = `미션 완료! 모든 빈칸 ${inputs.length}개가 초록색입니다. 🎁`;
+        } else {
+          missionProgress.classList.remove('complete');
+          missionProgress.textContent = `현재 ${correctCount}/${inputs.length}개 정답입니다. 모든 빈칸을 초록색으로 만들어 보세요.`;
+        }
+      }
+
+      inputs.forEach(input => input.addEventListener('input', () => {
+        saveCurrentMissionValues();
+        updateProgress();
+      }));
+      updateProgress();
+    }
+
+    function updateBlankMission(data, isObtuseAtSelectedAngle, isRightAtSelectedAngle) {
+      const nextMissionKey = buildMissionKey(data, isObtuseAtSelectedAngle, isRightAtSelectedAngle);
+      if (currentMissionKey === nextMissionKey && blankMission.querySelector('.mission-input')) {
+        return;
+      }
+      saveCurrentMissionValues();
+
+      const angle = data.selectedBaseLabel;       // 기준각: A, B, C 중 하나
+      const target = data.targetSide;            // 기준각의 대변
+      const base = data.baseSide;                // 수선을 내린 꼭짓점의 대변
+      const adj = data.adjacentSide;             // 기준각에 인접한 변
+      const P = data.PLabel;                     // 수선을 내린 꼭짓점
+      const V = data.selectedBaseLabel;          // 기준각의 꼭짓점
+      const O = data.otherBaseLabel;             // 대변의 다른 끝점
+      const targetTriangle = `${O}${P}H`;
+
+      const sideBlank = (s) => missionInput([s], 'mini');
+      const angleBlank = () => missionInput([angle], 'mini');
+      const zeroBlank = () => missionInput(['0'], 'mini');
+      const ninetyBlank = () => missionInput(['90'], 'small');
+      const segmentBlank = (s) => missionInput([s], 'small');
+      const signBlank = (s) => missionInput([s], 'mini');
+
+      let proofHTML = '';
+
+      if (isRightAtSelectedAngle) {
+        proofHTML = `
+          <div class="proof-case">기준각 ${angle} = 90°일 때</div>
+          <div class="proof-row">cos${angle} = cos ${ninetyBlank()}° = ${zeroBlank()} 이므로</div>
+          <div class="proof-sub">${target}<sup>2</sup> = ${sideBlank(base)}<sup>2</sup> + ${sideBlank(adj)}<sup>2</sup></div>
+          <div class="proof-sub">= ${base}<sup>2</sup> + ${adj}<sup>2</sup> - 2${base}${adj}cos${angleBlank()}</div>
+          <div class="proof-final">따라서 ${target}<sup>2</sup> = ${base}<sup>2</sup> + ${adj}<sup>2</sup> - 2${base}${adj}cos${angle}</div>
+        `;
+      } else if (isObtuseAtSelectedAngle) {
+        proofHTML = `
+          <div class="proof-case">기준각 ${angle} &gt; 90°일 때</div>
+          <div class="proof-row">△ABC의 꼭짓점 ${P}에서 대변 ${base}의 연장선에 내린 수선의 발을 H라 하면,</div>
+          <div class="proof-sub">${P}H = ${adj}sin(180° - ${angle}) = ${adj}sin${angleBlank()},</div>
+          <div class="proof-sub">${V}H = ${adj}cos(180° - ${angle}) = ${signBlank('-')}${adj}cos${angleBlank()},</div>
+          <div class="proof-sub">${O}H = ${sideBlank(base)} + ${V}H = ${sideBlank(base)} - ${adj}cos${angleBlank()} 이다.</div>
+          <div class="proof-row">따라서 직각삼각형 ${targetTriangle}에서 피타고라스 정리에 의하여</div>
+          <div class="proof-sub">${target}<sup>2</sup> = ${O}H<sup>2</sup> + ${segmentBlank(`${P}H`)}<sup>2</sup></div>
+          <div class="proof-sub">= (${sideBlank(base)} - ${adj}cos${angleBlank()})<sup>2</sup> + (${sideBlank(adj)}sin${angleBlank()})<sup>2</sup></div>
+          <div class="proof-sub">= ${base}<sup>2</sup> + ${adj}<sup>2</sup>(cos<sup>2</sup>${angleBlank()} + sin<sup>2</sup>${angleBlank()}) - 2${base}${adj}cos${angleBlank()}</div>
+          <div class="proof-final">= ${base}<sup>2</sup> + ${sideBlank(adj)}<sup>2</sup> - 2${base}${adj}cos${angle}</div>
+        `;
+      } else {
+        proofHTML = `
+          <div class="proof-case">기준각 ${angle} &lt; 90°일 때</div>
+          <div class="proof-row">△ABC의 꼭짓점 ${P}에서 대변 ${base}에 내린 수선의 발을 H라 하면,</div>
+          <div class="proof-sub">${P}H = ${adj}sin${angleBlank()}, &nbsp; ${V}H = ${adj}cos${angleBlank()},</div>
+          <div class="proof-sub">${O}H = ${sideBlank(base)} - ${adj}cos${angleBlank()} 이다.</div>
+          <div class="proof-row">따라서 직각삼각형 ${targetTriangle}에서 피타고라스 정리에 의하여</div>
+          <div class="proof-sub">${target}<sup>2</sup> = ${O}H<sup>2</sup> + ${segmentBlank(`${P}H`)}<sup>2</sup></div>
+          <div class="proof-sub">= (${sideBlank(base)} - ${adj}cos${angleBlank()})<sup>2</sup> + (${sideBlank(adj)}sin${angleBlank()})<sup>2</sup></div>
+          <div class="proof-sub">= ${base}<sup>2</sup> + ${adj}<sup>2</sup>(cos<sup>2</sup>${angleBlank()} + sin<sup>2</sup>${angleBlank()}) - 2${base}${adj}cos${angleBlank()}</div>
+          <div class="proof-final">= ${base}<sup>2</sup> + ${sideBlank(adj)}<sup>2</sup> - 2${base}${adj}cos${angle}</div>
+        `;
+      }
+
+      blankMission.outerHTML = `<div class="worksheet-proof" id="blankMission">${proofHTML}</div>`;
+      // outerHTML로 교체된 요소를 다시 참조한다.
+      blankMission = document.getElementById('blankMission');
+      currentMissionKey = nextMissionKey;
+      restoreMissionValues(currentMissionKey);
+      setupMissionChecks();
+    }
+
     function updatePanel(data) {
       const triangle = classifyTriangle();
       const foot = footStatus(data.foot.t);
@@ -725,15 +1073,12 @@
       const target = unitLength(data.otherToP);
       const h = unitLength(data.PH);
 
-      // 기준각이 둔각이면 cos 값이 음수이므로, x를 양의 길이로 두기 위해 x = -인접변·cos(기준각)으로 둔다.
-      // 기준각이 예각이면 x = 인접변·cos(기준각)으로 둔다.
-      
-      thinkingHint.textContent = `기준각 ${data.selectedBaseLabel}의 대변 ${data.targetSide}의 길이를 어떻게 구할 수 있을지 생각해 보세요.`;
-      
       const isObtuseAtSelectedAngle = data.cosTheta < -0.0001;
       const isRightAtSelectedAngle = Math.abs(data.cosTheta) <= 0.0001;
       const xValue = isObtuseAtSelectedAngle ? -adjacent * data.cosTheta : adjacent * data.cosTheta;
       const otherSegment = isObtuseAtSelectedAngle ? base + xValue : base - xValue;
+
+      updateBlankMission(data, isObtuseAtSelectedAngle, isRightAtSelectedAngle);
 
       const lhs = target * target;
       const rhs = adjacent * adjacent + base * base - 2 * adjacent * base * data.cosTheta;
@@ -741,78 +1086,102 @@
       const xDefinition = isObtuseAtSelectedAngle
         ? `x = -${data.adjacentSide} cos${data.selectedBaseLabel}`
         : `x = ${data.adjacentSide} cos${data.selectedBaseLabel}`;
+
       const distanceExpression = isObtuseAtSelectedAngle
         ? `(${data.baseSide} + x)<sup>2</sup>`
         : `(${data.baseSide} - x)<sup>2</sup>`;
+
       const expansionExpression = isObtuseAtSelectedAngle
         ? `(${data.adjacentSide}<sup>2</sup> - x<sup>2</sup>) + (${data.baseSide} + x)<sup>2</sup>`
         : `(${data.adjacentSide}<sup>2</sup> - x<sup>2</sup>) + (${data.baseSide} - x)<sup>2</sup>`;
 
+      fixedAngleInfo.textContent =
+        `현재는 ${data.PLabel}에서 대변 ${data.baseSide}로 수선을 내리고, 기준각은 ∠${data.selectedBaseLabel}로 고정합니다.`;
+
+      thinkingHint.textContent =
+        `목표: 기준각 ∠${data.selectedBaseLabel}의 대변 ${data.targetSide} = ? 를 구해 봅시다.`;
+
       statusPills.innerHTML = `
         <span class="pill ${triangle.tone}">${triangle.type}</span>
         <span class="pill ${foot.tone}">${foot.text}</span>
-        <span class="pill">${data.selectedBaseLabel} = ${fmt(thetaDeg, 1)}°</span>
+        <span class="pill">기준각 ∠${data.selectedBaseLabel} = ${fmt(thetaDeg, 1)}°</span>
       `;
 
       measureList.innerHTML = `
         <div class="measure"><b>${data.baseSide}</b>${fmt(base)} 단위<br><span style="color:#6b7280">${data.PLabel}의 대변</span></div>
         <div class="measure"><b>${data.adjacentSide}</b>${fmt(adjacent)} 단위<br><span style="color:#6b7280">${data.otherBaseLabel}의 대변</span></div>
-        <div class="measure"><b>${data.targetSide}</b>${fmt(target)} 단위<br><span style="color:#6b7280">${data.selectedBaseLabel}의 대변</span></div>
+        <div class="measure"><b style="color:#dc2626; font-size:1.15rem;">${data.targetSide} = ?</b><span style="color:#6b7280">${data.selectedBaseLabel}의 대변, 구하려는 변</span></div>
         <div class="measure"><b>h = ${data.PLabel}H</b>${fmt(h)} 단위</div>
         <div class="measure"><b>x = ${data.selectedBaseLabel}H</b>${fmt(xValue)} 단위<br><span style="color:#6b7280">${isObtuseAtSelectedAngle ? '양의 길이' : '기준각 방향의 길이'}</span></div>
         <div class="measure"><b>${data.otherBaseLabel}H</b>${fmt(Math.abs(otherSegment))} 단위<br><span style="color:#6b7280">피타고라스에 쓰는 길이</span></div>
       `;
 
       formulaText.innerHTML = `
-        기준각: ${data.selectedBaseLabel}, 목표: ${data.targetSide}<sup>2</sup><br>
+        기준각: ∠${data.selectedBaseLabel}, 목표: ${data.targetSide}<sup>2</sup><br>
         ${data.targetSide}<sup>2</sup> = h<sup>2</sup> + ${distanceExpression}<br>
         ${xDefinition}, &nbsp; h<sup>2</sup> = ${data.adjacentSide}<sup>2</sup> - x<sup>2</sup><br>
         ${data.targetSide}<sup>2</sup> = ${expansionExpression}<br>
-        <strong>${data.targetSide}<sup>2</sup> = ${data.adjacentSide}<sup>2</sup> + ${data.baseSide}<sup>2</sup> - 2${data.adjacentSide}${data.baseSide} cos${data.selectedBaseLabel}</strong><br>
-        수치 확인: ${fmt(lhs)} ≈ ${fmt(rhs)}
+        <strong>${data.targetSide}<sup>2</sup> = ${data.adjacentSide}<sup>2</sup> + ${data.baseSide}<sup>2</sup> - 2${data.adjacentSide}${data.baseSide} cos${data.selectedBaseLabel}</strong>
+        <div class="formula-check">이 식을 이용하여 ${data.targetSide} = ? 를 구할 수 있습니다.</div>
       `;
 
       if (isObtuseAtSelectedAngle) {
         signedNote.textContent =
-          `기준각 ${data.selectedBaseLabel}이 둔각이면 H가 ${data.selectedBaseLabel} 쪽 바깥에 놓입니다. ` +
+          `기준각 ∠${data.selectedBaseLabel}이 둔각이면 H가 ∠${data.selectedBaseLabel} 쪽 바깥에 놓입니다. ` +
           `이때 x는 양의 길이로 두어 x = -${data.adjacentSide} cos${data.selectedBaseLabel}로 나타내고, ` +
           `${data.otherBaseLabel}H = ${data.baseSide} + x가 되어 ${data.targetSide}² = h² + (${data.baseSide} + x)²로 유도합니다.`;
       } else if (isRightAtSelectedAngle) {
         signedNote.textContent =
-          `기준각 ${data.selectedBaseLabel}이 직각이면 cos${data.selectedBaseLabel} = 0이므로 x = 0입니다. ` +
-          `따라서 코사인법칙은 ${data.targetSide}² = ${data.adjacentSide}² + ${data.baseSide}²가 되어 피타고라스 정리와 일치합니다.`;
+          `기준각 ∠${data.selectedBaseLabel}이 직각이면 cos${data.selectedBaseLabel} = 0이므로 x = 0입니다. ` +
+          `따라서 ${data.targetSide}² = ${data.adjacentSide}² + ${data.baseSide}²가 되어 피타고라스 정리와 일치합니다.`;
       } else {
         signedNote.textContent =
-          `기준각 ${data.selectedBaseLabel}이 예각이면 x = ${data.adjacentSide} cos${data.selectedBaseLabel}입니다. ` +
+          `기준각 ∠${data.selectedBaseLabel}이 예각이면 x = ${data.adjacentSide} cos${data.selectedBaseLabel}입니다. ` +
           `이때 ${data.otherBaseLabel}H = ${data.baseSide} - x가 되어 ${data.targetSide}² = h² + (${data.baseSide} - x)²로 유도합니다.`;
       }
     }
 
-    function drawSideLabels() {
+    function drawSideLabels(data) {
       const pairs = [
         ['A', 'B'], ['B', 'C'], ['C', 'A']
       ];
+
+      const sideColors = {
+        a: '#2563eb',
+        b: '#059669',
+        c: '#dc2626'
+      };
+
+      const sideBgs = {
+        a: '#dbeafe',
+        b: '#d1fae5',
+        c: '#fee2e2'
+      };
+
       for (const [l1, l2] of pairs) {
         const P = vertices[l1], Q = vertices[l2];
         const mid = { x: (P.x + Q.x) / 2, y: (P.y + Q.y) / 2 };
         const len = unitLength(dist(P, Q));
         const name = sideNameBetween(l1, l2);
-        drawText(`${name}=${fmt(len)}`, mid.x, mid.y - 12, {
-          font: '700 13px system-ui, sans-serif',
-          color: '#475569',
-          bg: 'rgba(255,255,255,0.85)'
+        const isTarget = name === data.targetSide;
+        const labelText = isTarget ? `${name} = ?` : `${name} = ${fmt(len)}`;
+
+        drawText(labelText, mid.x, mid.y - 15, {
+          font: isTarget ? '1000 31px system-ui, sans-serif' : '900 21px system-ui, sans-serif',
+          color: isTarget ? '#b91c1c' : sideColors[name],
+          bg: isTarget ? '#fecaca' : sideBgs[name],
+          height: isTarget ? 42 : 34
         });
       }
     }
 
     function draw() {
-      updateAngleSelectorLabels();
       ctx.clearRect(0, 0, W, H_CANVAS);
       const data = getDerivationData();
       const { PLabel, QLabel, RLabel, P, Q, R, foot } = data;
       const HPoint = foot.H;
 
-      // Triangle fill
+      // 삼각형 내부
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(vertices.A.x, vertices.A.y);
@@ -826,37 +1195,38 @@
       ctx.stroke();
       ctx.restore();
 
-      // Base extension and altitude
+      // 대변 연장선과 수선
       drawExtensionIfNeeded(Q, R, foot);
       drawLine(P, HPoint, { color: '#7c3aed', width: 3, dash: [8, 7] });
       drawRightAngleMarker(HPoint, P, Q, R);
 
-      // Highlight selected base and angle
+      // 선택된 대변과 기준각 표시
       drawLine(Q, R, { color: '#2563eb', width: 5 });
       drawAngleArc(data.V, P, data.O, `∠${data.selectedBaseLabel}`);
 
-      // Re-draw triangle edges above highlights
+      // 삼각형 변 다시 그리기
       drawLine(vertices.A, vertices.B, { color: '#111827', width: 2.5 });
       drawLine(vertices.B, vertices.C, { color: '#111827', width: 2.5 });
       drawLine(vertices.C, vertices.A, { color: '#111827', width: 2.5 });
       drawLine(P, HPoint, { color: '#7c3aed', width: 3, dash: [8, 7] });
 
-      drawSideLabels();
+      drawSideLabels(data);
 
+      // x 표시: 기준각 꼭짓점에서 수선의 발 H까지
       drawOffsetSegmentLabel(data.V, HPoint, 'x');
 
+      // h 표시: 수선 점선 옆에 라벨만 표시
       const hMid = {
         x: (P.x + HPoint.x) / 2,
         y: (P.y + HPoint.y) / 2
       };
-      
       drawText('h', hMid.x + 18, hMid.y, {
         color: '#5b21b6',
         bg: '#ede9fe',
         font: '800 15px system-ui, sans-serif'
       });
 
-      // Foot H
+      // 수선의 발 H
       ctx.save();
       ctx.beginPath();
       ctx.arc(HPoint.x, HPoint.y, 7, 0, Math.PI * 2);
@@ -868,7 +1238,7 @@
       ctx.restore();
       drawText('H', HPoint.x + 18, HPoint.y + 18, { color: '#5b21b6', bg: '#ede9fe' });
 
-      // Vertices
+      // 꼭짓점
       for (const label of ['A', 'B', 'C']) {
         const isSelected = label === PLabel;
         drawPoint(vertices[label], label, {
@@ -877,14 +1247,14 @@
         });
       }
 
-      // Small instruction on canvas
-      drawText('꼭짓점 A, B, C를 드래그해 보세요', 22, 28, {
+      // 안내 문구
+      drawText('점은 고정되어 있습니다. 버튼으로 삼각형을 바꿔 보세요.', 22, 28, {
         align: 'left',
         color: '#475569',
         bg: 'rgba(255,255,255,0.9)',
         font: '700 14px system-ui, sans-serif'
       });
-      drawText(`${PLabel}에서 ${sideLetter[PLabel]}로 수선`, 22, 56, {
+      drawText(`${PLabel}에서 대변 ${sideLetter[PLabel]}로 수선`, 22, 56, {
         align: 'left',
         color: '#5b21b6',
         bg: '#ede9fe',
@@ -894,66 +1264,13 @@
       updatePanel(data);
     }
 
-    function pointerPosition(evt) {
-      const rect = canvas.getBoundingClientRect();
-      return {
-        x: (evt.clientX - rect.left) * (canvas.width / rect.width),
-        y: (evt.clientY - rect.top) * (canvas.height / rect.height)
-      };
-    }
-
-    function nearestVertex(pos) {
-      let best = null;
-      let bestDist = Infinity;
-      for (const label of ['A', 'B', 'C']) {
-        const d = dist(pos, vertices[label]);
-        if (d < bestDist) {
-          bestDist = d;
-          best = label;
-        }
-      }
-      return bestDist <= 28 ? best : null;
-    }
-
-    canvas.addEventListener('pointerdown', (evt) => {
-      const pos = pointerPosition(evt);
-      const label = nearestVertex(pos);
-      if (!label) return;
-      dragging = label;
-      canvas.classList.add('dragging');
-      canvas.setPointerCapture(evt.pointerId);
-    });
-
-    canvas.addEventListener('pointermove', (evt) => {
-      if (!dragging) return;
-      const pos = pointerPosition(evt);
-      vertices[dragging].x = clamp(pos.x, 30, W - 30);
-      vertices[dragging].y = clamp(pos.y, 30, H_CANVAS - 30);
-      draw();
-    });
-
-    function stopDrag(evt) {
-      dragging = null;
-      canvas.classList.remove('dragging');
-      try { canvas.releasePointerCapture(evt.pointerId); } catch (e) {}
-    }
-
-    canvas.addEventListener('pointerup', stopDrag);
-    canvas.addEventListener('pointercancel', stopDrag);
-    canvas.addEventListener('pointerleave', () => {
-      if (!dragging) return;
-      dragging = null;
-      canvas.classList.remove('dragging');
-    });
-
     altitudeFrom.addEventListener('change', draw);
-    angleAt.addEventListener('change', draw);
 
     document.querySelectorAll('[data-preset]').forEach(btn => {
       btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
     });
 
-    draw();
+    applyPreset('acute');
   </script>
 </body>
 </html>
